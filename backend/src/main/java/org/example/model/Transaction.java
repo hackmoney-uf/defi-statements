@@ -3,6 +3,7 @@ package org.example.model;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.time.ZonedDateTime;
+import java.util.Objects;
 
 public class Transaction {
 
@@ -35,6 +36,19 @@ public class Transaction {
             ", feesPaid='" + feesPaid + '\'' +
             ", signedAt='" + signedAt + '\'' +
             '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Transaction that = (Transaction) o;
+        return Objects.equals(hash, that.hash) && Objects.equals(from, that.from) && Objects.equals(to, that.to) && Objects.equals(value, that.value) && Objects.equals(valueQuote, that.valueQuote) && Objects.equals(feesPaid, that.feesPaid) && Objects.equals(signedAt, that.signedAt);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(hash, from, to, value, valueQuote, feesPaid, signedAt);
     }
 
     public static final class Builder {
