@@ -101,4 +101,21 @@ describe("Statements", async () => {
     // then
     await expect(statements.connect(appSigner).markProcessed(requestInitiator.address, index, cid)).to.be.reverted;
   });
+
+  it("withdraw money to the owner", async () => {
+    // given
+    const from = 1640991600000;
+    const to = 1646089200000;
+
+    const value = ethers.utils.parseEther("1");
+    await statements.requestStatement(from, to, { value: value });
+
+    const owner = (await ethers.getSigners())[0];
+
+    // when
+    const transaction = await statements.connect(appSigner).withdrawAll();
+
+    // then
+    await expect(transaction).to.changeEtherBalance(owner, value);
+  });
 });

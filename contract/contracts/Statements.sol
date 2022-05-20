@@ -15,9 +15,11 @@ contract Statements {
 
     mapping(address => Request[]) public requests;
     address public appAddress;
+    address public owner;
 
     constructor(address _appAddress) {
         appAddress = _appAddress;
+        owner = msg.sender;
     }
 
     modifier onlyApp {
@@ -48,5 +50,9 @@ contract Statements {
 
         request.processed = true;
         request.cid = cid;
+    }
+
+    function withdrawAll() public {
+        payable(owner).transfer(address(this).balance);
     }
 }
