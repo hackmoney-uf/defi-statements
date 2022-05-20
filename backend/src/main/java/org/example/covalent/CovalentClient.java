@@ -26,7 +26,7 @@ public class CovalentClient {
             .build()
             .send(request, HttpResponse.BodyHandlers.ofString());
 
-        return CovalentParser.parseTransactions(response.body());
+        return CovalentParser.parseTransactions(response.body(), address);
     }
 
 }
