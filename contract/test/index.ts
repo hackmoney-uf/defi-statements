@@ -19,8 +19,8 @@ describe("Statements", async () => {
 
   it("should persist statement request", async () => {
     // given
-    const from = 0;
-    const to = 1000;
+    const from = 1640991600000;
+    const to = 1643670000000;
 
     // when
     const transaction = await statements.requestStatement(from, to,
@@ -50,11 +50,11 @@ describe("Statements", async () => {
 
   it("should revert if provided payment is too low", async () => {
     // given
-    const from = 0;
-    const to = 1000;
+    const from = 1640991600000;
+    const to = 1646089200000;
 
     // then
-    await expect(statements.requestStatement(from, to, { value: ethers.utils.parseEther("0.5") }))
+    await expect(statements.requestStatement(from, to, { value: ethers.utils.parseEther("0.1") }))
       .revertedWith("payment is too low");
   });
 
