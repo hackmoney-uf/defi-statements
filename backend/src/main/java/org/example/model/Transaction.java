@@ -1,6 +1,8 @@
 package org.example.model;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 
 public class Transaction {
 
@@ -10,6 +12,7 @@ public class Transaction {
     public final String value;
     public final BigDecimal valueQuote;
     public final String feesPaid;
+    public final ZonedDateTime signedAt;
 
     private Transaction(Builder builder) {
         hash = builder.hash;
@@ -18,6 +21,7 @@ public class Transaction {
         value = builder.value;
         valueQuote = builder.valueQuote;
         feesPaid = builder.feesPaid;
+        signedAt = builder.signedAt;
     }
 
     @Override
@@ -29,6 +33,7 @@ public class Transaction {
             ", value='" + value + '\'' +
             ", valueQuote=" + valueQuote +
             ", feesPaid='" + feesPaid + '\'' +
+            ", signedAt='" + signedAt + '\'' +
             '}';
     }
 
@@ -39,6 +44,7 @@ public class Transaction {
         private String value;
         private BigDecimal valueQuote;
         private String feesPaid;
+        private ZonedDateTime signedAt;
 
         public static Builder transaction() {
             return new Builder();
@@ -74,6 +80,11 @@ public class Transaction {
 
         public Builder feesPaid(String feesPaid) {
             this.feesPaid = feesPaid;
+            return this;
+        }
+
+        public Builder signedAt(ZonedDateTime signedAt) {
+            this.signedAt = signedAt;
             return this;
         }
 
