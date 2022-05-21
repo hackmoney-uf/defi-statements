@@ -2,7 +2,6 @@ package org.example.covalent;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import org.example.model.Transaction;
 
@@ -11,13 +10,12 @@ import java.util.List;
 import java.util.stream.StreamSupport;
 
 import static org.example.model.Transaction.Builder.transaction;
+import static org.example.util.Json.parseJsonNode;
 
 public class CovalentParser {
 
-    private final static ObjectMapper MAPPER = new ObjectMapper();
-
     public static List<Transaction> parseTransactions(String input, String address) throws JsonProcessingException {
-        final var jsonNode = MAPPER.readTree(input);
+        final var jsonNode = parseJsonNode(input);
         return StreamSupport.stream(jsonNode.path("data").path("items").spliterator(), false)
             .map(node -> transaction()
                 .hash(node.findValue("tx_hash").asText())
