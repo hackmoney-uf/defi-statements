@@ -2,10 +2,10 @@ package org.example.model;
 
 import java.math.BigDecimal;
 import java.time.ZonedDateTime;
+import java.util.List;
 import java.util.Objects;
-import java.util.Optional;
 
-import static java.util.Optional.empty;
+import static java.util.Collections.emptyList;
 
 public class Transaction {
 
@@ -16,7 +16,7 @@ public class Transaction {
     public final BigDecimal valueQuote;
     public final String feesPaid;
     public final ZonedDateTime signedAt;
-    public final Optional<Erc20Transaction> erc20Transaction;
+    public final List<Erc20Transaction> erc20Transactions;
 
     private Transaction(Builder builder) {
         hash = builder.hash;
@@ -26,7 +26,7 @@ public class Transaction {
         valueQuote = builder.valueQuote;
         feesPaid = builder.feesPaid;
         signedAt = builder.signedAt;
-        erc20Transaction = builder.erc20Transaction;
+        erc20Transactions = builder.erc20Transactions;
     }
 
     @Override
@@ -39,7 +39,7 @@ public class Transaction {
             ", valueQuote=" + valueQuote +
             ", feesPaid='" + feesPaid + '\'' +
             ", signedAt='" + signedAt + '\'' +
-            ", erc20Transaction='" + erc20Transaction + '\'' +
+            ", erc20Transactions='" + erc20Transactions + '\'' +
             '}';
     }
 
@@ -48,12 +48,12 @@ public class Transaction {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Transaction that = (Transaction) o;
-        return Objects.equals(hash, that.hash) && Objects.equals(from, that.from) && Objects.equals(to, that.to) && Objects.equals(value, that.value) && Objects.equals(valueQuote, that.valueQuote) && Objects.equals(feesPaid, that.feesPaid) && Objects.equals(signedAt, that.signedAt) && Objects.equals(erc20Transaction, that.erc20Transaction);
+        return Objects.equals(hash, that.hash) && Objects.equals(from, that.from) && Objects.equals(to, that.to) && Objects.equals(value, that.value) && Objects.equals(valueQuote, that.valueQuote) && Objects.equals(feesPaid, that.feesPaid) && Objects.equals(signedAt, that.signedAt) && Objects.equals(erc20Transactions, that.erc20Transactions);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(hash, from, to, value, valueQuote, feesPaid, signedAt, erc20Transaction);
+        return Objects.hash(hash, from, to, value, valueQuote, feesPaid, signedAt, erc20Transactions);
     }
 
     public record Erc20Transaction(String from, String to, String value, String symbol, String contract) {
@@ -68,7 +68,7 @@ public class Transaction {
         private BigDecimal valueQuote;
         private String feesPaid;
         private ZonedDateTime signedAt;
-        private Optional<Erc20Transaction> erc20Transaction = empty();
+        private List<Erc20Transaction> erc20Transactions = emptyList();
 
         public static Builder transaction() {
             return new Builder();
@@ -112,8 +112,8 @@ public class Transaction {
             return this;
         }
 
-        public Builder erc20Transaction(Optional<Erc20Transaction> erc20Transaction) {
-            this.erc20Transaction = erc20Transaction;
+        public Builder erc20Transactions(List<Erc20Transaction> erc20Transactions) {
+            this.erc20Transactions = erc20Transactions;
             return this;
         }
 
