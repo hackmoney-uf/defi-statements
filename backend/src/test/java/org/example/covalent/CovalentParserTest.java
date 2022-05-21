@@ -22,7 +22,7 @@ class CovalentParserTest {
         final var input = readString(get(CovalentParserTest.class.getResource("/covalentResponse-native-tokens.json").toURI()));
 
         // when
-        final var result = CovalentParser.parseTransactions(input, "0x1ee01f7a3425f00931b00aad20a5a3e559d4f404");
+        final var result = CovalentParser.parseTransactions(input, "0x1ee01f7a3425f00931b00aad20a5a3e559d4f404", ZonedDateTime.parse("2022-03-21T13:28:04Z"), ZonedDateTime.parse("2022-06-21T13:28:04Z"));
 
         // then
         assertThat(result).containsExactly(
@@ -52,7 +52,7 @@ class CovalentParserTest {
         final var input = readString(get(CovalentParserTest.class.getResource("/covalentResponse-native-to-erc20.json").toURI()));
 
         // when
-        final var result = CovalentParser.parseTransactions(input, "0x1ee01f7a3425f00931b00aad20a5a3e559d4f404");
+        final var result = CovalentParser.parseTransactions(input, "0x1ee01f7a3425f00931b00aad20a5a3e559d4f404", ZonedDateTime.parse("2022-03-21T13:28:04Z"), ZonedDateTime.parse("2022-06-21T13:28:04Z"));
 
         // then
         assertThat(result).containsExactly(
@@ -86,7 +86,7 @@ class CovalentParserTest {
         final var input = readString(get(CovalentParserTest.class.getResource("/covalentResponse-erc20-to-erc20.json").toURI()));
 
         // when
-        final var result = CovalentParser.parseTransactions(input, "0x1ee01f7a3425f00931b00aad20a5a3e559d4f404");
+        final var result = CovalentParser.parseTransactions(input, "0x1ee01f7a3425f00931b00aad20a5a3e559d4f404", ZonedDateTime.parse("2022-03-21T13:28:04Z"), ZonedDateTime.parse("2022-06-21T13:28:04Z"));
 
         // then
         assertThat(result).containsExactly(
@@ -110,10 +110,10 @@ class CovalentParserTest {
         final var input = readString(get(CovalentParserTest.class.getResource("/covalentResponse-all.json").toURI()));
 
         // when
-        final var result = CovalentParser.parseTransactions(input, "0x1ee01f7a3425f00931b00aad20a5a3e559d4f404");
+        final var result = CovalentParser.parseTransactions(input, "0x1ee01f7a3425f00931b00aad20a5a3e559d4f404", ZonedDateTime.parse("2022-05-18T13:28:04Z"), ZonedDateTime.parse("2022-06-21T13:28:04Z"));
 
         // then
-        assertThat(result).hasSize(19);
+        assertThat(result).hasSize(10);
     }
 
 }
