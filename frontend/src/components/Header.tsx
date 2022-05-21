@@ -1,10 +1,17 @@
-import { Box, Button, Center } from "@chakra-ui/react";
+import { Box, Button, Center, Link } from "@chakra-ui/react";
 import Web3Modal from "web3modal";
 import { ethers } from "ethers";
 import { providerOptions } from "../utils/providerOptions";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
+import { useRouter } from "next/router";
+import { CommonContext } from "../contexts/CommonContext";
+import { MUMBAI_CHAIN_ID } from "../utils/constants";
+import { switchNetwork } from "../utils/eth";
 
 const Header = () => {
+
+  const router = useRouter();
+  const { setProvider } = useContext(CommonContext);
 
   const [web3Modal, setWeb3Modal] = useState<Web3Modal | undefined>();
   const [account, setAccount] = useState<string>("");
@@ -26,6 +33,18 @@ const Header = () => {
     }
     const instance = await web3Modal.connect();
     const provider = new ethers.providers.Web3Provider(instance);
+    const network = await provider.getNetwork();
+    if (network.chainId != MUMBAI_CHAIN_ID) {
+      if (instance.isWalletConnect) {
+        alert("Please connect to Polygon Mumbai network");
+        return;
+      }
+
+      await switchNetwork(provider, MUMBAI_CHAIN_ID);
+    }
+
+    setProvider(new ethers.providers.Web3Provider(instance));
+
     const account = (await provider.listAccounts())[0];
     setAccount(account);
   }
@@ -36,6 +55,7 @@ const Header = () => {
     }
 
     await web3Modal.clearCachedProvider();
+    setProvider(undefined);
     setAccount('');
   }
 
@@ -49,7 +69,9 @@ const Header = () => {
         borderBottomWidth="1px"
       >
         <Center>
-          Logo here
+          <Link onClick={() => router.push("/")}>
+            Logo here
+          </Link>
         </Center>
         <Center textAlign="right">
           {account ? <Center>{account}</Center> : ''}

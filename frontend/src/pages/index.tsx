@@ -1,10 +1,14 @@
 import type { NextPage } from 'next'
-import { Center } from "@chakra-ui/react";
+import { Button, Center } from "@chakra-ui/react";
+import { useRouter } from "next/router";
 
 const Home: NextPage = () => {
+
+  const router = useRouter();
+
   return (
     <Center>
-      TODO: add landing page info
+      <Button onClick={() => router.push("/statements")}>Statements</Button>
     </Center>
   )
 }
