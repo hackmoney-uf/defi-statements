@@ -10,11 +10,16 @@ contract Statements {
         bytes cid;
     }
 
+    uint256 constant public baseFee = 10 ** 17;
+    uint256 constant public multiplier = 10 ** 7;
+
     mapping(address => Request[]) public requests;
     address public appAddress;
+    address public owner;
 
     constructor(address _appAddress) {
         appAddress = _appAddress;
+        owner = msg.sender;
     }
 
     modifier onlyApp {
@@ -26,8 +31,7 @@ contract Statements {
 
     function requestStatement(uint256 from, uint256 to) public payable {
         require(from < to, "'from' timestamp is greater then 'to' timestamp");
-        // todo: calculate payment for fee
-        require(msg.value >= 1 ether, "payment is too low");
+        require(msg.value >= baseFee + (to - from) * multiplier, "payment is too low");
 
         uint256 index = requests[msg.sender].length;
 
@@ -46,5 +50,9 @@ contract Statements {
 
         request.processed = true;
         request.cid = cid;
+    }
+
+    function withdrawAll() public {
+        payable(owner).transfer(address(this).balance);
     }
 }

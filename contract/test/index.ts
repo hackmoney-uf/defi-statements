@@ -19,8 +19,8 @@ describe("Statements", async () => {
 
   it("should persist statement request", async () => {
     // given
-    const from = 0;
-    const to = 1000;
+    const from = 1640991600000;
+    const to = 1643670000000;
 
     // when
     const transaction = await statements.requestStatement(from, to,
@@ -50,11 +50,11 @@ describe("Statements", async () => {
 
   it("should revert if provided payment is too low", async () => {
     // given
-    const from = 0;
-    const to = 1000;
+    const from = 1640991600000;
+    const to = 1646089200000;
 
     // then
-    await expect(statements.requestStatement(from, to, { value: ethers.utils.parseEther("0.5") }))
+    await expect(statements.requestStatement(from, to, { value: ethers.utils.parseEther("0.1") }))
       .revertedWith("payment is too low");
   });
 
@@ -100,5 +100,22 @@ describe("Statements", async () => {
 
     // then
     await expect(statements.connect(appSigner).markProcessed(requestInitiator.address, index, cid)).to.be.reverted;
+  });
+
+  it("withdraw money to the owner", async () => {
+    // given
+    const from = 1640991600000;
+    const to = 1646089200000;
+
+    const value = ethers.utils.parseEther("1");
+    await statements.requestStatement(from, to, { value: value });
+
+    const owner = (await ethers.getSigners())[0];
+
+    // when
+    const transaction = await statements.connect(appSigner).withdrawAll();
+
+    // then
+    await expect(transaction).to.changeEtherBalance(owner, value);
   });
 });
