@@ -8,7 +8,6 @@ import org.example.model.Transaction;
 
 import java.time.ZonedDateTime;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.StreamSupport;
 
 import static org.example.model.Transaction.Builder.transaction;
@@ -28,12 +27,13 @@ public class CovalentParser {
                 .valueQuote(node.findValue("value_quote").decimalValue())
                 .feesPaid(node.findValue("fees_paid").asText())
                 .signedAt(ZonedDateTime.parse(node.findValue("block_signed_at").asText()))
-                .erc20Transaction(findErc20(node.withArray("log_events"), address))
+                .erc20Transactions(findErc20(node.withArray("log_events"), address))
                 .build())
+            .filter(transaction -> !transaction.value.equals("0") || !transaction.erc20Transactions.isEmpty())
             .toList();
     }
 
-    private static Optional<Transaction.Erc20Transaction> findErc20(ArrayNode events, String address) {
+    private static List<Transaction.Erc20Transaction> findErc20(ArrayNode events, String address) {
         return StreamSupport.stream(events.spliterator(), false)
             .filter(elem ->  elem.path("sender_contract_ticker_symbol").textValue() != null)
             .filter(elem -> isValidParam(elem.path("decoded"), address))
@@ -45,7 +45,7 @@ public class CovalentParser {
                 final var contract = elem.path("sender_address").asText();
                 return new Transaction.Erc20Transaction(from, to, value, symbol, contract);
             })
-            .findAny();
+            .toList();
     }
 
     private static boolean isValidParam(JsonNode decoded, String address) {
