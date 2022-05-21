@@ -5,6 +5,7 @@ import { expect } from "chai";
 import { ethers } from "hardhat";
 import { Statements } from "../typechain";
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
+import { BigNumber } from "ethers";
 
 describe("Statements", async () => {
   let appSigner: SignerWithAddress;
@@ -117,5 +118,51 @@ describe("Statements", async () => {
 
     // then
     await expect(transaction).to.changeEtherBalance(owner, value);
+  });
+
+  it("should return required fee", async () => {
+    // given
+    const from = 1640991600000;
+    const to = 1646089200000;
+
+    const baseFee = await statements.baseFee();
+    const multiplier = await statements.multiplier();
+
+    const expectedFee = baseFee.add(BigNumber.from(to - from).mul(multiplier));
+
+    // when
+    const requiredFee = await statements.requiredFee(from, to);
+
+    // then
+    await expect(requiredFee).to.be.equal(expectedFee);
+  });
+
+  it("should return all request for the address", async () => {
+    // given
+    const from1 = 1640991600000;
+    const to1 = 1643670000000;
+    await statements.requestStatement(from1, to1,
+      { value: ethers.utils.parseEther("1") });
+
+    const from2 = 1660991600000;
+    const to2 = 1663670000000;
+    await statements.requestStatement(from2, to2,
+      { value: ethers.utils.parseEther("1") });
+
+    const account = (await ethers.getSigners())[0];
+
+    // when
+    const requests = await statements.allRequestsFor(account.address);
+
+    // then
+    expect(requests.length).to.be.equal(2);
+
+    expect(requests[0].from).to.be.equal(from1);
+    expect(requests[0].to).to.be.equal(to1);
+    expect(requests[0].processed).to.be.false;
+
+    expect(requests[1].from).to.be.equal(from2);
+    expect(requests[1].to).to.be.equal(to2);
+    expect(requests[1].processed).to.be.false;
   });
 });

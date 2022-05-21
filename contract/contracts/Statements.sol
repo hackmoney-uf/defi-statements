@@ -31,7 +31,7 @@ contract Statements {
 
     function requestStatement(uint256 from, uint256 to) public payable {
         require(from < to, "'from' timestamp is greater then 'to' timestamp");
-        require(msg.value >= baseFee + (to - from) * multiplier, "payment is too low");
+        require(msg.value >= requiredFee(from, to), "payment is too low");
 
         uint256 index = requests[msg.sender].length;
 
@@ -54,5 +54,13 @@ contract Statements {
 
     function withdrawAll() public {
         payable(owner).transfer(address(this).balance);
+    }
+
+    function allRequestsFor(address requestInitiator) public view returns (Request[] memory) {
+        return requests[requestInitiator];
+    }
+
+    function requiredFee(uint256 from, uint256 to) public view returns (uint256) {
+        return baseFee + (to - from) * multiplier;
     }
 }
