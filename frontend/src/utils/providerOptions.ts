@@ -5,14 +5,14 @@ export const providerOptions = {
   walletconnect: {
     package: WalletConnectProvider,
     options: {
-      infuraId: process.env.NEXT_PUBLIC_INFURA_KEY,
+      infuraId: 'dfc96fa5f5a740dfbb804e243ca83e17',
     }
   },
   coinbasewallet: {
     package: CoinbaseWalletSDK,
     options: {
       appName: "DeFi Statements",
-      infuraId: process.env.NEXT_PUBLIC_INFURA_KEY,
+      infuraId: 'dfc96fa5f5a740dfbb804e243ca83e17',
     }
   }
 };
