@@ -6,6 +6,8 @@ import { STATEMENTS_CONTRACT_ADDRESS } from "../utils/constants";
 export interface Context {
   provider: ethers.providers.Web3Provider | undefined,
   setProvider: (p: ethers.providers.Web3Provider | undefined) => void,
+  account: string,
+  setAccount: (a: string) => void,
   statementsContract: Statements | undefined
 }
 
@@ -13,10 +15,14 @@ export const CommonContext = createContext<Context>({
   provider: undefined,
   setProvider: (p) => {
   },
+  account: '',
+  setAccount: (a) => {
+  },
   statementsContract: undefined
 });
 
 export const CommonContextProvider = ({ children }: any) => {
+  const [account, setAccount] = useState<string>('');
   const [provider, setProvider] = useState<ethers.providers.Web3Provider | undefined>();
 
   const statementsContract = useMemo(() => {
@@ -32,6 +38,8 @@ export const CommonContextProvider = ({ children }: any) => {
     <CommonContext.Provider value={{
       provider,
       setProvider,
+      account,
+      setAccount,
       statementsContract
     }}>
       {children}

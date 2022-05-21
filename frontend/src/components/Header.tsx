@@ -11,10 +11,9 @@ import { switchNetwork } from "../utils/eth";
 const Header = () => {
 
   const router = useRouter();
-  const { setProvider } = useContext(CommonContext);
+  const { setProvider, setAccount, account } = useContext(CommonContext);
 
   const [web3Modal, setWeb3Modal] = useState<Web3Modal | undefined>();
-  const [account, setAccount] = useState<string>("");
 
   useEffect(() => {
     if (!window) {

@@ -22,6 +22,7 @@ import type { TypedEventFilter, TypedEvent, TypedListener } from "./common";
 
 interface StatementsInterface extends ethers.utils.Interface {
   functions: {
+    "allRequestsFor(address)": FunctionFragment;
     "appAddress()": FunctionFragment;
     "baseFee()": FunctionFragment;
     "markProcessed(address,uint256,bytes)": FunctionFragment;
@@ -29,9 +30,14 @@ interface StatementsInterface extends ethers.utils.Interface {
     "owner()": FunctionFragment;
     "requestStatement(uint256,uint256)": FunctionFragment;
     "requests(address,uint256)": FunctionFragment;
+    "requiredFee(uint256,uint256)": FunctionFragment;
     "withdrawAll()": FunctionFragment;
   };
 
+  encodeFunctionData(
+    functionFragment: "allRequestsFor",
+    values: [string]
+  ): string;
   encodeFunctionData(
     functionFragment: "appAddress",
     values?: undefined
@@ -55,10 +61,18 @@ interface StatementsInterface extends ethers.utils.Interface {
     values: [string, BigNumberish]
   ): string;
   encodeFunctionData(
+    functionFragment: "requiredFee",
+    values: [BigNumberish, BigNumberish]
+  ): string;
+  encodeFunctionData(
     functionFragment: "withdrawAll",
     values?: undefined
   ): string;
 
+  decodeFunctionResult(
+    functionFragment: "allRequestsFor",
+    data: BytesLike
+  ): Result;
   decodeFunctionResult(functionFragment: "appAddress", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "baseFee", data: BytesLike): Result;
   decodeFunctionResult(
@@ -72,6 +86,10 @@ interface StatementsInterface extends ethers.utils.Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(functionFragment: "requests", data: BytesLike): Result;
+  decodeFunctionResult(
+    functionFragment: "requiredFee",
+    data: BytesLike
+  ): Result;
   decodeFunctionResult(
     functionFragment: "withdrawAll",
     data: BytesLike
@@ -132,6 +150,20 @@ export class Statements extends BaseContract {
   interface: StatementsInterface;
 
   functions: {
+    allRequestsFor(
+      requestInitiator: string,
+      overrides?: CallOverrides
+    ): Promise<
+      [
+        ([BigNumber, BigNumber, boolean, string] & {
+          from: BigNumber;
+          to: BigNumber;
+          processed: boolean;
+          cid: string;
+        })[]
+      ]
+    >;
+
     appAddress(overrides?: CallOverrides): Promise<[string]>;
 
     baseFee(overrides?: CallOverrides): Promise<[BigNumber]>;
@@ -166,10 +198,28 @@ export class Statements extends BaseContract {
       }
     >;
 
+    requiredFee(
+      from: BigNumberish,
+      to: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<[BigNumber]>;
+
     withdrawAll(
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
   };
+
+  allRequestsFor(
+    requestInitiator: string,
+    overrides?: CallOverrides
+  ): Promise<
+    ([BigNumber, BigNumber, boolean, string] & {
+      from: BigNumber;
+      to: BigNumber;
+      processed: boolean;
+      cid: string;
+    })[]
+  >;
 
   appAddress(overrides?: CallOverrides): Promise<string>;
 
@@ -205,11 +255,29 @@ export class Statements extends BaseContract {
     }
   >;
 
+  requiredFee(
+    from: BigNumberish,
+    to: BigNumberish,
+    overrides?: CallOverrides
+  ): Promise<BigNumber>;
+
   withdrawAll(
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
   callStatic: {
+    allRequestsFor(
+      requestInitiator: string,
+      overrides?: CallOverrides
+    ): Promise<
+      ([BigNumber, BigNumber, boolean, string] & {
+        from: BigNumber;
+        to: BigNumber;
+        processed: boolean;
+        cid: string;
+      })[]
+    >;
+
     appAddress(overrides?: CallOverrides): Promise<string>;
 
     baseFee(overrides?: CallOverrides): Promise<BigNumber>;
@@ -244,6 +312,12 @@ export class Statements extends BaseContract {
       }
     >;
 
+    requiredFee(
+      from: BigNumberish,
+      to: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
     withdrawAll(overrides?: CallOverrides): Promise<void>;
   };
 
@@ -266,6 +340,11 @@ export class Statements extends BaseContract {
   };
 
   estimateGas: {
+    allRequestsFor(
+      requestInitiator: string,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
     appAddress(overrides?: CallOverrides): Promise<BigNumber>;
 
     baseFee(overrides?: CallOverrides): Promise<BigNumber>;
@@ -293,12 +372,23 @@ export class Statements extends BaseContract {
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
+    requiredFee(
+      from: BigNumberish,
+      to: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
     withdrawAll(
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
   };
 
   populateTransaction: {
+    allRequestsFor(
+      requestInitiator: string,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
     appAddress(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     baseFee(overrides?: CallOverrides): Promise<PopulatedTransaction>;
@@ -323,6 +413,12 @@ export class Statements extends BaseContract {
     requests(
       arg0: string,
       arg1: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    requiredFee(
+      from: BigNumberish,
+      to: BigNumberish,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
