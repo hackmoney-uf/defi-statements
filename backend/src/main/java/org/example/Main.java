@@ -1,29 +1,26 @@
 package org.example;
 
+import org.apache.http.auth.AuthScope;
+import org.apache.http.auth.UsernamePasswordCredentials;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.ContentType;
+import org.apache.http.entity.mime.MultipartEntityBuilder;
+import org.apache.http.impl.client.BasicCredentialsProvider;
+import org.apache.http.impl.client.HttpClientBuilder;
+import org.apache.http.util.EntityUtils;
 import org.example.contract.Statements;
-import org.example.covalent.CovalentClient;
-import org.web3j.abi.EventEncoder;
-import org.web3j.abi.FunctionReturnDecoder;
-import org.web3j.abi.TypeReference;
-import org.web3j.abi.datatypes.Address;
-import org.web3j.abi.datatypes.Event;
-import org.web3j.abi.datatypes.Type;
-import org.web3j.abi.datatypes.generated.Uint256;
+import org.example.util.Json;
 import org.web3j.crypto.Credentials;
 import org.web3j.protocol.Web3j;
-import org.web3j.protocol.core.DefaultBlockParameterName;
 import org.web3j.protocol.core.methods.request.EthFilter;
 import org.web3j.protocol.http.HttpService;
-import org.web3j.tx.Contract;
 import org.web3j.tx.FastRawTransactionManager;
 import org.web3j.tx.gas.DefaultGasProvider;
 
+import java.io.File;
 import java.io.IOException;
-import java.net.URISyntaxException;
-import java.util.Arrays;
-import java.util.List;
+import java.io.PrintWriter;
 
-import static java.lang.String.format;
 import static org.web3j.protocol.core.DefaultBlockParameterName.EARLIEST;
 import static org.web3j.protocol.core.DefaultBlockParameterName.LATEST;
 
@@ -33,6 +30,9 @@ public class Main {
     public static final String CONTRACT_ADDRESS = "address";
     public static final String APP_PRIVATE_KEY = "key";
     public static final long CHAIN_ID = 80001;
+    public static final String IPFS_USER = "user";
+    public static final String IPFS_PASSWORD = "password";
+    public static final String IPFS_UPLOAD_URL = "url";
 
     public static void main(String[] args) {
         final var web3j = Web3j.build(new HttpService(NODE_PROVIDER_URL));
@@ -47,12 +47,42 @@ public class Main {
                     System.out.printf("Already handled request. Requestor=[%s], index=[%s]%n", log.requestor, log.index);
                     return;
                 }
-                // TODO build statement and upload
-                final byte[] cid = {};
+                // TODO build statement
+                final var file = File.createTempFile("statement", ".csv");
+                try {
+                    PrintWriter out = new PrintWriter(file);
+                    out.println("!test content for hack money! " + log.requestor + " " + log.index);
+                    out.close();
 
-                statementsContract.markProcessed(log.requestor, log.index, cid).send();
-                System.out.printf("Success! Requestor=[%s], index=[%s], cid=[%s]%n", log.requestor, log.index, new String(cid));
+                    final var hash = uploadFile(file);
+                    System.out.println("file uploaded to ipfs with: " + hash);
+
+                    statementsContract.markProcessed(log.requestor, log.index, hash.getBytes()).send();
+                    System.out.printf("Success! Requestor=[%s], index=[%s], cid=[%s]%n", log.requestor, log.index, new String(hash.getBytes()));
+                } catch (Exception e) {
+                    System.out.println("Something went wrong: " + e);
+                }
             },
             Throwable::printStackTrace);
+    }
+
+    private static String uploadFile(File file) throws IOException {
+        final var credentialsProvider = new BasicCredentialsProvider();
+        credentialsProvider.setCredentials(
+            AuthScope.ANY,
+            new UsernamePasswordCredentials(IPFS_USER, IPFS_PASSWORD)
+        );
+
+        try (var client = HttpClientBuilder.create().setDefaultCredentialsProvider(credentialsProvider).build()) {
+            final var httpPost = new HttpPost(IPFS_UPLOAD_URL);
+
+            final var builder = MultipartEntityBuilder.create();
+            builder.addBinaryBody("file", file, ContentType.DEFAULT_BINARY, "statement.ext");
+            final var multipart = builder.build();
+            httpPost.setEntity(multipart);
+            final var response = client.execute(httpPost);
+            final var result = Json.parseJsonNode(EntityUtils.toString(response.getEntity()));
+            return result.path("Hash").asText();
+        }
     }
 }

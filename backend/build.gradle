@@ -12,6 +12,8 @@ repositories {
 dependencies {
     implementation 'com.fasterxml.jackson.core:jackson-databind:2.13.3'
     implementation 'org.web3j:core:4.9.2'
+    implementation 'org.apache.httpcomponents:httpclient:4.5.13'
+    implementation "org.apache.httpcomponents:httpmime:4.5.13"
 
     testImplementation 'org.assertj:assertj-core:3.22.0'
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.1'
