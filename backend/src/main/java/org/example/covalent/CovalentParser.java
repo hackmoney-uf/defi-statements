@@ -14,9 +14,13 @@ import static org.example.util.Json.parseJsonNode;
 
 public class CovalentParser {
 
-    public static List<Transaction> parseTransactions(String input, String address) throws JsonProcessingException {
+    public static List<Transaction> parseTransactions(String input, String address, ZonedDateTime from, ZonedDateTime to) throws JsonProcessingException {
         final var jsonNode = parseJsonNode(input);
         return StreamSupport.stream(jsonNode.path("data").path("items").spliterator(), false)
+            .filter(node -> {
+                final var txDate = ZonedDateTime.parse(node.findValue("block_signed_at").asText());
+                return from.isBefore(txDate) && txDate.isBefore(to);
+            })
             .map(node -> transaction()
                 .hash(node.findValue("tx_hash").asText())
                 .from(node.findValue("from_address").asText())
