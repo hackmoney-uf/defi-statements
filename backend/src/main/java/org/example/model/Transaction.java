@@ -1,6 +1,11 @@
 package org.example.model;
 
 import java.math.BigDecimal;
+import java.time.ZonedDateTime;
+import java.util.Objects;
+import java.util.Optional;
+
+import static java.util.Optional.empty;
 
 public class Transaction {
 
@@ -10,6 +15,8 @@ public class Transaction {
     public final String value;
     public final BigDecimal valueQuote;
     public final String feesPaid;
+    public final ZonedDateTime signedAt;
+    public final Optional<Erc20Transaction> erc20Transaction;
 
     private Transaction(Builder builder) {
         hash = builder.hash;
@@ -18,6 +25,8 @@ public class Transaction {
         value = builder.value;
         valueQuote = builder.valueQuote;
         feesPaid = builder.feesPaid;
+        signedAt = builder.signedAt;
+        erc20Transaction = builder.erc20Transaction;
     }
 
     @Override
@@ -29,7 +38,26 @@ public class Transaction {
             ", value='" + value + '\'' +
             ", valueQuote=" + valueQuote +
             ", feesPaid='" + feesPaid + '\'' +
+            ", signedAt='" + signedAt + '\'' +
+            ", erc20Transaction='" + erc20Transaction + '\'' +
             '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Transaction that = (Transaction) o;
+        return Objects.equals(hash, that.hash) && Objects.equals(from, that.from) && Objects.equals(to, that.to) && Objects.equals(value, that.value) && Objects.equals(valueQuote, that.valueQuote) && Objects.equals(feesPaid, that.feesPaid) && Objects.equals(signedAt, that.signedAt) && Objects.equals(erc20Transaction, that.erc20Transaction);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(hash, from, to, value, valueQuote, feesPaid, signedAt, erc20Transaction);
+    }
+
+    public record Erc20Transaction(String from, String to, String value, String symbol, String contract) {
+
     }
 
     public static final class Builder {
@@ -39,6 +67,8 @@ public class Transaction {
         private String value;
         private BigDecimal valueQuote;
         private String feesPaid;
+        private ZonedDateTime signedAt;
+        private Optional<Erc20Transaction> erc20Transaction = empty();
 
         public static Builder transaction() {
             return new Builder();
@@ -74,6 +104,16 @@ public class Transaction {
 
         public Builder feesPaid(String feesPaid) {
             this.feesPaid = feesPaid;
+            return this;
+        }
+
+        public Builder signedAt(ZonedDateTime signedAt) {
+            this.signedAt = signedAt;
+            return this;
+        }
+
+        public Builder erc20Transaction(Optional<Erc20Transaction> erc20Transaction) {
+            this.erc20Transaction = erc20Transaction;
             return this;
         }
 
