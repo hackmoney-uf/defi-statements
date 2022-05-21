@@ -1,8 +1,13 @@
 import { ethers } from "hardhat";
+import * as dotenv from "dotenv";
+
+dotenv.config();
+
+const APP_ADDRESS = process.env.APP_ADDRESS;
 
 const deploy = async () => {
   const Statements = await ethers.getContractFactory("Statements");
-  const statements = await Statements.deploy();
+  const statements = await Statements.deploy(`${APP_ADDRESS}`);
 
   await statements.deployed();
 
