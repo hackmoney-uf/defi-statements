@@ -1,4 +1,5 @@
-<div style="text-align: center;"><img src="logo_transparent.png" alt="BlockRep" width="400"/></div>
+<p align="center"><a href="https://defi-statements-8hzeah.spheron.app/"><img src="logo_transparent.png" alt="BlockRep" width="600"/></a></p>  
+<p align="center">Application URL: https://defi-statements-8hzeah.spheron.app/</p>
 
 ##### Table of Contents
 - [Description](#description)
@@ -24,7 +25,7 @@ BlockRep (Blockchain Reporting) is a set of applications which allow you to coll
 
 ## Architecture and used dependencies
 ### Current state
-<div style="text-align: center;"><img src="schema.png" alt="BlockRep" width="1000"/></div>
+<p align="center"><div style="text-align: center;"><img src="schema.png" alt="BlockRep" width="1000"/></div></p>
 
 * User can connect the wallet via [Metamask](https://metamask.io), [WalletConnect](https://www.walletconnect.com) or [CoinbaseWallet](https://www.coinbase.com/wallet)
 * Frontend application deployed to [IPFS](https://ipfs.io/) via [Spheron](https://aqua.spheron.network/)
