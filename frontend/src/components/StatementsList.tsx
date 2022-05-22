@@ -1,6 +1,6 @@
 import { useContext, useEffect, useState } from "react";
 import { CommonContext } from "../contexts/CommonContext";
-import { Link, Table, TableContainer, Tbody, Td, Th, Thead, Tr } from "@chakra-ui/react";
+import { Center, Link, Table, TableContainer, Tbody, Td, Th, Thead, Tr } from "@chakra-ui/react";
 import { IPFS_LINK_PREFIX } from "../utils/constants";
 import { ethers } from "ethers";
 
@@ -40,7 +40,8 @@ const StatementsList = () => {
   }
 
   return (
-    <TableContainer>
+    <Center width={"100%"}>
+    <TableContainer width={"80%"} >
       <Table variant='simple'>
         <Thead>
           <Tr>
@@ -69,6 +70,7 @@ const StatementsList = () => {
         </Tbody>
       </Table>
     </TableContainer>
+    </Center>
   );
 }
 

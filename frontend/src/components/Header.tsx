@@ -7,6 +7,7 @@ import { useRouter } from "next/router";
 import { CommonContext } from "../contexts/CommonContext";
 import { MUMBAI_CHAIN_ID } from "../utils/constants";
 import { switchNetwork } from "../utils/eth";
+import Image from "next/image";
 
 const Header = () => {
 
@@ -61,15 +62,15 @@ const Header = () => {
   return (
     <>
       <Box
+        bgGradient='linear(to-r, #ffffff, #908cdc)'
         display="flex"
         justifyContent={"space-between"}
         px="10%"
         py="20px"
-        borderBottomWidth="1px"
       >
         <Center>
           <Link onClick={() => router.push("/")}>
-            Logo here
+            <Image alt={"logo"} src={"logo.svg"} height={50} width={170}/>
           </Link>
         </Center>
         <Center textAlign="right">
@@ -77,8 +78,20 @@ const Header = () => {
           <Center w={'13rem'}>
             {
               !account ?
-                <Button onClick={connectWallet} textAlign="center">Connect wallet</Button> :
-                <Button onClick={disconnectWallet} textAlign="center">Disconnect wallet</Button>
+                <Button className={"blockRep-button"}
+                        background={'white'}
+                        onClick={connectWallet}
+                        textAlign="center"
+                >
+                  Connect wallet
+                </Button> :
+                <Button className={"blockRep-button"}
+                        background={'white'}
+                        onClick={disconnectWallet}
+                        textAlign="center"
+                >
+                  Disconnect wallet
+                </Button>
             }
           </Center>
         </Center>
