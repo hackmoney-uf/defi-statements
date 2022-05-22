@@ -1,5 +1,6 @@
 plugins {
     id 'java'
+    id "com.github.johnrengelman.shadow" version "7.1.2"
 }
 
 group 'org.example'
@@ -23,4 +24,17 @@ dependencies {
 
 test {
     useJUnitPlatform()
+}
+
+ext {
+    javaMainClass = "org.example.Main"
+}
+
+shadowJar {
+    archiveBaseName.set("block-rep")
+    archiveClassifier.set("")
+    archiveVersion.set("")
+    mergeServiceFiles()
+
+    jar.manifest.attributes(["Main-Class": "${javaMainClass}"])
 }
