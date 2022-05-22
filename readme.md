@@ -1,4 +1,4 @@
-<p align="center"><a href="https://defi-statements-8hzeah.spheron.app/"><img src="logo_transparent.png" alt="BlockRep" width="600"/></a></p>  
+<p align="center"><a target="_blank" href="https://defi-statements-8hzeah.spheron.app/"><img src="frontend/public/logo.svg" alt="BlockRep" width="600"/></a></p>  
 <p align="center">Application URL: https://defi-statements-8hzeah.spheron.app/</p>
 
 ##### Table of Contents
