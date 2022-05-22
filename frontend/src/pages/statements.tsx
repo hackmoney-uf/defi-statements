@@ -1,14 +1,14 @@
 import StatementsRequest from "../components/StatementsRequest";
 import StatementsList from "../components/StatementsList";
-import { HStack } from "@chakra-ui/react";
+import { Box } from "@chakra-ui/react";
 
 const Statements = () => {
   return (
     <>
-      <HStack>
+      <Box display={"flex"}>
         <StatementsRequest/>
         <StatementsList/>
-      </HStack>
+      </Box>
     </>
   );
 }
