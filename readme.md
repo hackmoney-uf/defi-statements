@@ -1,5 +1,44 @@
-## DeFi Statements
+<div style="text-align: center;"><img src="logo_transparent.png" alt="BlockRep" width="400"/></div>
 
+##### Table of Contents
+- [Description](#description)
+    * [How to use](#how-to-use)
+- [Architecture and used dependencies](#architecture-and-used-dependencies)
+    * [Current state](#current-state)
+    * [Potential further improvements](#potential-further-improvements)
+- [Build and deploy](#build-and-deploy)
+    * [Frontend](#frontend)
+    * [Backend](#backend)
+    * [Contracts](#contracts)
+
+## Description
+BlockRep (Blockchain Reporting) is a set of applications which allow you to collect transaction details and use it for more advanced analytics or prepare tax declaration reports.
+### How to use
+1. Go to the app https://defi-statements-8hzeah.spheron.app/
+2. "Connect wallet"
+3. "Statements"
+4. Pick the date range and "Request statement"
+5. Approve transaction in your wallet
+6. Wait until transaction handled and new statement link appeared on the page
+7. Use link to get your statement
+
+## Architecture and used dependencies
+### Current state
+<div style="text-align: center;"><img src="schema.png" alt="BlockRep" width="1000"/></div>
+
+* User can connect the wallet via [Metamask](https://metamask.io), [WalletConnect](https://www.walletconnect.com) or [CoinbaseWallet](https://www.coinbase.com/wallet)
+* Frontend application deployed to [IPFS](https://ipfs.io/) via [Spheron](https://aqua.spheron.network/)
+* Smart contract deployed and tested on [Polygon](https://polygon.technology/) [Mumbai](https://mumbai.polygonscan.com/address/0xb530731846ABCAa90976d8bd2b57999dD8dd74ef)
+* On chain data for transaction details gathered via [Covalent](https://www.covalenthq.com/)
+* Statement report uploading to [IPFS](https://ipfs.io/)
+
+### Potential further improvements
+* Enhanced transaction details. Such as USD price for ERC20.
+* Multichain support (and not only EVM).
+* Tax declarations ready to use per country.
+* Analytics: PnL, market value etc.
+
+## Build and deploy
 ### Frontend
 All commands executed in `frontend` directory
 
