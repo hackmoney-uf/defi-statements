@@ -23,7 +23,7 @@ export const switchNetwork = async (provider: ethers.providers.Web3Provider, net
     return
   }
 
-  const chainId = ethers.utils.hexlify(networkId);
+  const chainId = '0x' + networkId.toString(16);
   try {
     await provider.provider.request({
       method: "wallet_switchEthereumChain",
